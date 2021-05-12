@@ -15,7 +15,7 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.junit.Assert.assertEquals;
 
 @RunWith(SerenityRunner.class)
-public class RefactoredGithubAPITests {
+public class RefactoredAPITests {
     @Title("Checking for the correct user")
     @Test
     public void verifyLoginExistedUserAndReturn200() {
