@@ -1,14 +1,13 @@
-import java.util.Base64;
+
 
 public class Config {
-    public static String githubAPIToken = new String(Base64.getDecoder().decode("dG9rZW4gZ2hwX2tGNXpoeTVWOFMxSnJVSXY0YW9YeEtZYVQzNWc4bTRkdEE5Yw=="));
-    public static String githubAPIBaseURI = "https://api.github.com";
-    public static String githubAPIgetUsersPath = "/users";
-    public static String githubAPIcreateUserProjectPath = "/user/projects";
-    public static String githubAPIupdateUserProjectPath = "/projects/{projectId}";
-    public static String githubAPIdeleteUserProjectPath = "/projects/{projectId}";
-    public static String githubAPIgetIssues = "/repos/inidzelsky/tests-serenium/issues";
-    public static String githubAPIgetEmail = "/user/emails";
-    public static String githubAPIdeleteEmail = "/user/emails";
-    public static String githubAPIdeleteUserBlock = "/user/blocks/{username}";
+    public static String BASE_URL = "https://social-network.samuraijs.com/api/1.0/";
+    public static String PAGE_USERS_ENDPOINT = "users?page=${pageNumber}";
+    public static String USERS_ENDPOINT = "users";
+    public static String PROFILE = "profile";
+    public static String USER_BY_ID = "profile/{userId}";
+    public static String LOGIN_ENDPOINT = "/auth/login";
+    public static String LOGIN_ME = "/auth/me";
+    public static String COUNT_USERS_ENDPOINT = "user?page=1&count=101";
+    public static String apiToken = "";
 }

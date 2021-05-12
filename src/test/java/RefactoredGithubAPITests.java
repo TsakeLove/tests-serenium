@@ -3,113 +3,60 @@ import models.User;
 import models.Email;
 import net.serenitybdd.junit.runners.SerenityRunner;
 import net.thucydides.core.annotations.Title;
+import org.hamcrest.Matchers;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import models.Login;
+import models.Profile;
+
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
+import static org.junit.Assert.assertEquals;
 
 @RunWith(SerenityRunner.class)
 public class RefactoredGithubAPITests {
-    @Title("getUsers")
+    @Title("Checking for the correct user")
     @Test
-    public void getUsers() {
-        User[] users = new GithubAPIRequestService()
-                .getUsersRequest()
-                .then()
-                .statusCode(200)
-                .extract()
-                .as(User[].class);
-
-        assertThat(users.length, equalTo(30));
+    public void verifyLoginExistedUserAndReturn200() {
+        Login login = new Login();
+        login.setEmail("tsake.love@gmail.com");
+        login.setPassword("Aa123456");
+        new APIRequest().loginUser(login).then().statusCode(200);
     }
 
-    @Title("updateUserProject")
+    @Title("Profile access check")
     @Test
-    public void updateUserProject() {
-        Project project = new GithubAPIRequestService()
-                .createUserProjectRequest("create-project")
-                .as(Project.class);
-
-        long projectId = project.id;
-
-        String updatedName = "closed-rest-assured-test-project";
-        String updatedState = "closed";
-
-        Project updatedProject = new GithubAPIRequestService()
-                .updateUserProjectRequest(projectId, updatedName, updatedState)
-                .then()
-                .statusCode(200)
-                .extract()
-                .as(Project.class);
-
-        assertThat(updatedProject.name, equalTo("closed-rest-assured-test-project"));
-        assertThat(updatedProject.state, equalTo("closed"));
+    public void getMtProfileWithCode200() {
+        new APIRequest().me().then().statusCode(200);
     }
 
-    @Title("createUserProject")
+    @Title("An attempt to log in to a non-existent user")
     @Test
-    public void createUserProject() {
-        String projectName = "rest-assured-test-project";
-        Project project = new GithubAPIRequestService()
-                .createUserProjectRequest(projectName)
-                .then()
-                .statusCode(201)
-                .extract()
-                .as(Project.class);
+    public void verifyLoginNonExistedUserAndReceiveError() {
 
-        assertThat(project.name, equalTo("rest-assured-test-project"));
-    }
 
-    @Title("deleteUserProject")
-    @Test
-    public void deleteUserProject() {
-        Project project = new GithubAPIRequestService()
-                .createUserProjectRequest("create-project")
-                .as(Project.class);
-
-        long projectId = project.id;
-
-        new GithubAPIRequestService().deleteUserProjectRequest(projectId).then().statusCode(204);
-    }
-
-    // New tests
-    @Title("getRepositoryIssues")
-    @Test
-    public void getRepositoryIssues() {
-        new GithubAPIRequestService().getRepositoryIssues().then().statusCode(200);
-    }
-
-    @Title("getUserEmails")
-    @Test
-    public void getUserEmails() {
-        Email[] emails = new GithubAPIRequestService()
-                .getUserEmails()
-                .then()
-                .statusCode(200)
-                .extract()
-                .as(Email[].class);
-
-        assertThat(emails[0].email, equalTo("inidzelsky@gmail.com"));
-    }
-
-    @Title("deleteUserBlock")
-    @Test
-    public void deleteUserBlock() {
-        new GithubAPIRequestService()
-                .deleteUserBlock("TsakeLove")
-                .then()
-                .statusCode(204);
+        Login login = new Login();
+        login.setEmail("NotExisted@gmail.com");
+        login.setPassword("123456");
+        new APIRequest().loginUser(login).then().assertThat().body(Matchers.notNullValue());
 
     }
 
-    // This fill fall
-    @Title("deleteUserEmail")
+    @Title("Attempt to access encrypted information")
     @Test
-    public void deleteUserEmail() {
-        new GithubAPIRequestService()
-                .deleteUserEmail("octocat@cat.com")
-                .then()
-                .statusCode(204);
+    public void verifyNonAuthorizationUserAndReceiveError() {
+
+        Profile message = new APIRequest().putProfile().as(Profile.class);
+        assertEquals("Authorization has been denied for this request.", message.message);
+
+    }
+
+    @Title("User log out")
+    @Test
+    public void LogOut() {
+
+        new APIRequest().deleteProfile().then().statusCode(201);
+
     }
 }
