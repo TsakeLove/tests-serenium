@@ -1,6 +1,3 @@
-import models.Project;
-import models.User;
-import models.Email;
 import net.serenitybdd.junit.runners.SerenityRunner;
 import net.thucydides.core.annotations.Title;
 import org.hamcrest.Matchers;
@@ -10,9 +7,8 @@ import org.junit.runner.RunWith;
 import models.Login;
 import models.Profile;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
-import static org.junit.Assert.assertEquals;
+
+import static org.junit.Assert.assertEquals; //
 
 @RunWith(SerenityRunner.class)
 public class RefactoredAPITests {
