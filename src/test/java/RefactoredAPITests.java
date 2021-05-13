@@ -8,7 +8,7 @@ import models.Login;
 import models.Profile;
 
 
-import static org.junit.Assert.assertEquals; //
+import static org.junit.Assert.assertEquals; 
 
 @RunWith(SerenityRunner.class)
 public class RefactoredAPITests {
